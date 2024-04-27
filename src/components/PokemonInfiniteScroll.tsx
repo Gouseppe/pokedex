@@ -41,7 +41,7 @@ export const PokemonInfiniteScroll = () => {
         hasMore={true}
         loader={<h4>Loading...</h4>}
       >
-        <div className='gap-4 grid grid-cols-link-card'>
+        <div className='gap-4 grid grid-cols-link-card justify-items-center'>
           {pokemons.length > 0 &&
             pokemons?.map((pokemon) => (
               <ReactCard
