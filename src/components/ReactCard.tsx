@@ -2,6 +2,7 @@ import { capitalize } from '../helpers/strings';
 import type { PokemonTypes } from '../types';
 
 interface Props {
+  id: number;
   title: string;
   body?: string;
   image: string;
@@ -41,7 +42,13 @@ const colors: Record<PokemonTypes, string> = {
     'bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300',
 };
 
-export const ReactCard: React.FC<Props> = ({ image, title, types, body }) => {
+export const ReactCard: React.FC<Props> = ({
+  image,
+  title,
+  types,
+  body,
+  id,
+}) => {
   return (
     <div className='max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
       <a href='#'>
@@ -52,9 +59,13 @@ export const ReactCard: React.FC<Props> = ({ image, title, types, body }) => {
           {capitalize(title)}
         </h5>
         <div className='flex justify-between'>
-          <div className='mb-2' key={title}>
+          <div className='mb-2'>
             {types.map((type) => {
-              return <span className={colors[type]}>{type}</span>;
+              return (
+                <span key={type} className={colors[type]}>
+                  {type}
+                </span>
+              );
             })}
           </div>
 
