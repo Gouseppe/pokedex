@@ -2,41 +2,22 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/AstroCard.astro';
 import { PokemonInfiniteScroll } from '../components/PokemonInfiniteScroll';
+import ThemeToggle from '../components/ThemeToggle.astro';
 ---
 
 <Layout title='Welcome to Astro.'>
   <main>
-    <h1>Welcome to <span class='text-gradient'>Astro</span></h1>
+    <h1 class='dark:text-white text-gray-800'>
+      Welcome to my <span class='text-gradient'>Pokedex</span>
+    </h1>
     <p class='instructions'>
       To get started, open the directory <code>src/pages</code> in your project.<br
       />
       <strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
     </p>
-
-    <label class='inline-flex items-center cursor-pointer'>
-      <input type='checkbox' value='' class='sr-only peer toggle-theme' />
-      <div
-        class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-      >
-      </div>
-      <span class='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'
-        >Presioname</span
-      >
-    </label>
+    <ThemeToggle />
 
     <PokemonInfiniteScroll client:load />
-
-    <script>
-      const htmlElement = document.querySelector('html');
-      const toggleTheme = () => {
-        document.documentElement.classList.toggle('dark');
-        console.log('hola mundo');
-      };
-
-      document
-        .querySelector('.toggle-theme')
-        ?.addEventListener('change', toggleTheme);
-    </script>
   </main>
 </Layout>
 
@@ -66,13 +47,13 @@ import { PokemonInfiniteScroll } from '../components/PokemonInfiniteScroll';
     text-align: center;
     margin-bottom: 1em;
   }
-  .text-gradient {
+  /* .text-gradient {
     background-image: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 400%;
     background-position: 0%;
-  }
+  } */
   .instructions {
     margin-bottom: 2rem;
     border: 1px solid rgba(var(--accent-light), 25%);
