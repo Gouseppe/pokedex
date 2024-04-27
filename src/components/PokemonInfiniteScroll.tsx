@@ -1,48 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Card from './AstroCard.astro';
-import type { PokemonTypes } from '../types';
+import type { APIPokemon, PokemonTypes } from '../types';
 import { ReactCard } from './ReactCard';
+import { getPokemons } from '../config/api/backend/pokemons';
 
 export const PokemonInfiniteScroll = () => {
-  const [pokemons, setPokemons] = useState<
-    { name: string; id: number; image: string; types: PokemonTypes[] }[] | []
-  >([]);
+  const [pokemons, setPokemons] = useState<APIPokemon[]>([]);
 
   const [filter, setFilter] = useState<{ cant: number; page: number }>({
     cant: 30,
     page: 0,
   });
 
-  console.log(pokemons);
-
   useEffect(() => {
     (async () => {
-      const pokemonsUrl = await (
-        await (
-          await fetch(
-            `https://pokeapi.co/api/v2/pokemon?limit=${filter.cant}&offset=${
-              filter.page * filter.cant
-            }`
-          )
-        ).json()
-      ).results;
-      const pokemosData = await Promise.all(
+      const pokemonsUrl = await getPokemons(
+        filter.cant,
+        filter.page * filter.cant
+      );
+      const pokemosData: APIPokemon[] = await Promise.all(
         pokemonsUrl.map(async (pokemon: { url: RequestInfo | URL }) => {
           const response = await fetch(pokemon.url);
           const data = await response.json();
           return data;
         })
       );
-      const result = pokemosData.map((pokemon: any) => {
-        return {
-          name: pokemon.name,
-          id: pokemon.id,
-          image: pokemon.sprites.other['official-artwork'].front_default,
-          types: pokemon.types.map((type: any) => type.type.name),
-        };
-      });
-      setPokemons([...pokemons, ...result]);
+      setPokemons([...pokemons, ...pokemosData]);
     })();
   }, [filter.cant, filter.page]);
 
@@ -63,10 +46,10 @@ export const PokemonInfiniteScroll = () => {
             pokemons?.map((pokemon) => (
               <ReactCard
                 key={pokemon.id}
-                image={pokemon.image}
+                id={pokemon.id}
+                image={pokemon.sprites.other['official-artwork'].front_default}
                 title={pokemon.name}
-                body='holap'
-                types={pokemon.types}
+                types={pokemon.types.map((type: any) => type.type.name)}
               />
             ))}
         </div>
