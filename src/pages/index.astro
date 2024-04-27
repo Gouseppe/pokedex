@@ -32,15 +32,10 @@ import { PokemonInfiniteScroll } from '../components/PokemonInfiniteScroll';
         document.documentElement.classList.toggle('dark');
         console.log('hola mundo');
       };
-      const darkMode = () => {
-        htmlElement?.classList.contains('dark')
-          ? htmlElement?.classList.remove('dark')
-          : htmlElement?.classList.add('dark');
-      };
 
       document
         .querySelector('.toggle-theme')
-        ?.addEventListener('change', darkMode);
+        ?.addEventListener('change', toggleTheme);
     </script>
   </main>
 </Layout>
