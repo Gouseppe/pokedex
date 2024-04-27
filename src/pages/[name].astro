@@ -1,0 +1,25 @@
+---
+import { getPokemon } from '../config/api/backend/pokemon';
+import { getPokemons } from '../config/api/backend/pokemons';
+import { capitalize } from '../helpers/strings';
+import Layout from '../layouts/Layout.astro';
+
+export const getStaticPaths = async () => {
+  const allPokemons = await getPokemons(10000, 0);
+  return allPokemons.map(({ name }) => ({
+    params: { name },
+  }));
+};
+
+const { name } = Astro.params;
+const pokemon = await getPokemon(name);
+---
+
+<Layout title={capitalize(name)}>
+  <div class='dark:text-yellow-300 text-yellow-800'>
+    hola, esta es la pagina de {name}
+  </div>
+  <button class='dark:text-yellow-300 text-yellow-800 showPokemons'
+    >hola, presioname</button
+  >
+</Layout>
