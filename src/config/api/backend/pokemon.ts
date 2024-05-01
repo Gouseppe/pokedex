@@ -1,9 +1,14 @@
 import type { APIPokemon } from '../../../types';
 import { API_URL } from '../../consts';
 
-export const getPokemon = async (name: string): Promise<APIPokemon> => {
+export const getPokemon = async (
+  name: string
+): Promise<APIPokemon | undefined> => {
   const response = await fetch(`${API_URL}pokemon/${name}`);
-  const pokemon: APIPokemon = await response.json();
+  if (response.status === 200) {
+    const pokemon = await response.json();
+    return pokemon;
+  }
 
-  return pokemon;
+  return undefined;
 };
