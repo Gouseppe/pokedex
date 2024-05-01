@@ -1,4 +1,5 @@
 import { capitalize } from '../helpers/strings';
+import { setPokemonName } from '../shared';
 import type { PokemonTypes } from '../types';
 
 interface Props {
@@ -50,14 +51,19 @@ export const ReactCard: React.FC<Props> = ({
   id,
 }) => {
   return (
-    <div className='max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
+    <section className='max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
       <a href='#'>
         <img className='rounded-t-lg' src={image} alt='' />
       </a>
       <div className='p-5'>
-        <h5 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
-          {capitalize(title)}
-        </h5>
+        <div className='flex justify-start gap-2'>
+          <h5 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
+            {capitalize(title)}
+          </h5>
+          <h5 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
+            #{`${id}`.padStart(3, '0')}
+          </h5>
+        </div>
         <div className='flex justify-between'>
           <div className='mb-2'>
             {types.map((type) => {
@@ -72,11 +78,12 @@ export const ReactCard: React.FC<Props> = ({
           <a
             href={`${title}`}
             className='inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+            onClick={() => setPokemonName(title)}
           >
             Saber mas
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
