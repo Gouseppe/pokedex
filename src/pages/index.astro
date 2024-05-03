@@ -1,19 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/AstroCard.astro';
 import { PokemonInfiniteScroll } from '../components/PokemonInfiniteScroll';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import ThemeToggle from '../components/ThemeToggler.astro';
+import { SearchInput } from '../components/SearchInput';
 ---
 
 <Layout title='Welcome to Astro.'>
   <main>
-    <h1 class='dark:text-white text-gray-800'>
-      Welcome to my <span class='text-gradient'>Pokedex</span>
-    </h1>
+    <SearchInput client:only='react' />
 
     <ThemeToggle />
 
-    <PokemonInfiniteScroll client:load />
+    <PokemonInfiniteScroll client:only='react' />
   </main>
 </Layout>
 
@@ -36,13 +34,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
     height: auto;
     z-index: -1;
   }
-  h1 {
-    font-size: 4rem;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    margin-bottom: 1em;
-  }
+
   /* .text-gradient {
     background-image: var(--accent-gradient);
     -webkit-background-clip: text;
