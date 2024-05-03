@@ -8,18 +8,19 @@
     >Presioname</span
   >
   <script>
-    const useDark = window.matchMedia('(prefers-color-scheme: dark)');
-    if (useDark.matches) {
-      document.documentElement.classList.add('dark');
-    }
+    document.addEventListener('astro:page-load', () => {
+      const useDark = window.matchMedia('(prefers-color-scheme: dark)');
+      if (useDark.matches) {
+        document.documentElement.classList.add('dark');
+      }
 
-    const htmlElement = document.querySelector('html');
-    const toggleTheme = () => {
-      document.documentElement.classList.toggle('dark');
-    };
+      const toggleTheme = () => {
+        document.documentElement.classList.toggle('dark');
+      };
 
-    document
-      .querySelector('.toggle-theme')
-      ?.addEventListener('change', toggleTheme);
+      document
+        .querySelector('.toggle-theme')
+        ?.addEventListener('change', toggleTheme);
+    });
   </script>
 </label>
