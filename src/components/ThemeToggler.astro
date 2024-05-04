@@ -1,26 +1,163 @@
-<label class='inline-flex items-center cursor-pointer'>
-  <input type='checkbox' value='' class='sr-only peer toggle-theme' />
+---
+import solgaleo from '../assets/solgaleo.png';
+import lunala from '../assets/lunala.png';
+---
+
+<label
+  transition:persist='theme-toggle'
+  class='inline-flex items-center cursor-pointer fixed bottom-4 right-4'
+>
+  <input type='checkbox' value='' class='sr-only peer' id='toggle-theme' />
   <div
+    class='circle-container dark:border-violet-800 border-yellow-200 border-2 dark:shadow-border-toggle-dark shadow-border-toggle-light'
+  >
+    <div class='circle'>
+      <span class='back' id='back' style=`background-image: url(${lunala.src});`
+      ></span>
+      <span
+        class='front'
+        id='front'
+        style=`background-image: url(${solgaleo.src});`></span>
+    </div>
+  </div>
+
+  <!-- <div
     class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
   >
-  </div>
-  <span class='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'
+  </div> -->
+  <!-- <span class='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'
     >Presioname</span
-  >
+  > -->
+
+  <style>
+    .circle-container {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+
+      padding: 3px;
+      position: relative;
+      transform-style: preserve-3d;
+      /* box-shadow:
+        inset 0 0 10px rgb(76 29 149),
+        0 0 10px rgb(76 29 149); */
+    }
+
+    .circle {
+      transform-style: preserve-3d;
+    }
+
+    .circle-container .circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      animation: rotate 4s linear infinite;
+      transition: transform 0.5s ease-in-out;
+      position: relative;
+    }
+    .circle-container .back,
+    .circle-container .front {
+      display: block;
+
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .circle-container .front {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      display: block;
+      border-radius: 50px;
+      background-color: rgb(248, 250, 252);
+    }
+    .circle-container .back {
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      border-radius: 50px;
+      transform: translateX(-50%) translateY(-50%) translateZ(-0.1px);
+      background-color: rgb(19, 21, 26);
+    }
+    #toggle-theme:checked + .circle-container .circle {
+      transform: rotateY(-180deg) translateZ(0px);
+    }
+  </style>
   <script>
     document.addEventListener('astro:page-load', () => {
-      const useDark = window.matchMedia('(prefers-color-scheme: dark)');
-      if (useDark.matches) {
-        document.documentElement.classList.add('dark');
-      }
-
-      const toggleTheme = () => {
+      const changeTheme = () => {
         document.documentElement.classList.toggle('dark');
+        localStorage.setItem(
+          'theme',
+          document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+        );
       };
 
       document
-        .querySelector('.toggle-theme')
-        ?.addEventListener('change', toggleTheme);
+        .getElementById('toggle-theme')
+        ?.addEventListener('change', changeTheme);
+    });
+  </script>
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const inputToggle = document.getElementById(
+        'toggle-theme'
+      ) as HTMLInputElement;
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+        inputToggle.checked = true;
+        return 0;
+      }
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.remove('dark');
+        inputToggle.checked = false;
+        return 0;
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+        inputToggle.checked = true;
+
+        return 0;
+      }
+      inputToggle.checked = false;
+    });
+  </script>
+  <!-- 
+  <script>
+    document.addEventListener('astro:after-swap', () => {
+      if (localStorage.theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        return 0;
+      }
+      if (localStorage.theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        return 0;
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+        return 0;
+      }
+    });
+  </script> -->
+
+  <script>
+    document.addEventListener('astro:after-swap', () => {
+      const changeTheme = () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem(
+          'theme',
+          document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+        );
+      };
+
+      document
+        .getElementById('toggle-theme')
+        ?.addEventListener('change', changeTheme);
     });
   </script>
 </label>
