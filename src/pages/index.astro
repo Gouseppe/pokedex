@@ -7,7 +7,9 @@ import { SearchInput } from '../components/SearchInput';
 
 <Layout title='Welcome to Astro.'>
   <main>
-    <SearchInput client:only='react' />
+    <div class='pb-4'>
+      <SearchInput client:only='react' />
+    </div>
 
     <ThemeToggle />
 

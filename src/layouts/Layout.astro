@@ -19,15 +19,16 @@ const { title } = Astro.props;
     <title>{title}</title>
     <ViewTransitions />
   </head>
-  <body class='bg-slate-50 dark:bg-[#13151a]'>
+  <body class='bg-slate-50 dark:bg-[#13151a] pt-4'>
     <h1
-      class='dark:text-white text-gray-800 mx-auto my-4 flex justify-center text-5xl font-bold'
+      class='dark:text-white text-gray-800 mx-auto mb-4 flex justify-center text-5xl font-bold'
     >
       <a href='/' class='block'>
         Welcome to my <span class='text-gradient'>Pokedex</span>
       </a>
     </h1>
     <slot />
+
     <style is:global>
       :root {
         --accent: 136, 58, 234;
