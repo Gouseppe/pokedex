@@ -6,6 +6,7 @@ import { getPokemons } from '../config/api/backend/pokemons';
 import { $filter, $pokemons, setFilter, setPokemon } from '../shared';
 import { useStore } from '@nanostores/react';
 import { getPokemon } from '../config/api/backend/pokemon';
+import { Charging } from './Charging';
 
 export const PokemonInfiniteScroll = () => {
   const pokemons = useStore($pokemons);
@@ -37,40 +38,24 @@ export const PokemonInfiniteScroll = () => {
   };
   return (
     <div>
-      {pokemons.length > 1 ? (
-        <InfiniteScroll
-          dataLength={pokemons.length || 0}
-          next={updateFilter}
-          hasMore={true}
-          loader={<h4>Loading...</h4>}
-        >
-          <div className='gap-4 grid grid-cols-link-card justify-items-center'>
-            {pokemons?.map((pokemon) => (
-              <ReactCard
-                key={pokemon.id}
-                id={pokemon.id}
-                image={pokemon.sprites.other['official-artwork'].front_default}
-                title={pokemon.name}
-                types={pokemon.types.map((type: any) => type.type.name)}
-              />
-            ))}
-          </div>
-        </InfiniteScroll>
-      ) : (
+      <InfiniteScroll
+        dataLength={pokemons.length || 0}
+        next={updateFilter}
+        hasMore={pokemons.length > 1}
+        loader={<Charging />}
+      >
         <div className='gap-4 grid grid-cols-link-card justify-items-center'>
-          {pokemons.length > 0 &&
-            pokemons?.map((pokemon) => (
-              <ReactCard
-                key={pokemon.id}
-                id={pokemon.id}
-                image={pokemon.sprites.other['official-artwork'].front_default}
-                title={pokemon.name}
-                types={pokemon.types.map((type: any) => type.type.name)}
-              />
-            ))}
-          {pokemons.length === 0 && <p>No hay pokemones</p>}
+          {pokemons?.map((pokemon) => (
+            <ReactCard
+              key={pokemon.id}
+              id={pokemon.id}
+              image={pokemon.sprites.other['official-artwork'].front_default}
+              title={pokemon.name}
+              types={pokemon.types.map((type: any) => type.type.name)}
+            />
+          ))}
         </div>
-      )}
+      </InfiniteScroll>
     </div>
   );
 };
