@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { PokemonInfiniteScroll } from '../components/PokemonInfiniteScroll';
-import ThemeToggle from '../components/ThemeToggler.astro';
 import { SearchInput } from '../components/SearchInput';
 ---
 
@@ -10,8 +9,6 @@ import { SearchInput } from '../components/SearchInput';
     <div class='pb-4'>
       <SearchInput client:only='react' />
     </div>
-
-    <ThemeToggle />
 
     <PokemonInfiniteScroll client:only='react' />
   </main>

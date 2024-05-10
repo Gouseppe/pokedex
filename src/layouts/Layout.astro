@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import ThemeToggle from '../components/ThemeToggler.astro';
 
 interface Props {
   title: string;
@@ -27,6 +28,8 @@ const { title } = Astro.props;
         Welcome to my <span class='text-gradient'>Pokedex</span>
       </a>
     </h1>
+    <ThemeToggle />
+
     <slot />
 
     <style is:global>
@@ -59,6 +62,9 @@ const { title } = Astro.props;
       }
       body {
         min-height: 100vh;
+      }
+      h1 {
+        text-align: center;
       }
     </style>
   </body>
