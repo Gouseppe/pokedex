@@ -1,10 +1,10 @@
 import { atom } from 'nanostores';
 import type { APIPokemon } from '../types';
 
-export const $pokemons = atom<APIPokemon[]>([]);
+export const $pokemons = atom<APIPokemon[] | undefined>([]);
 export const $pokemonName = atom<string>('');
 
-export const setPokemon = (pokemons: APIPokemon[]) => {
+export const setPokemon = (pokemons: APIPokemon[] | undefined) => {
   $pokemons.set(pokemons);
 };
 
