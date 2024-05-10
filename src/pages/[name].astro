@@ -4,6 +4,10 @@ import ThemeToggle from '../components/ThemeToggler.astro';
 import { getPokemon } from '../config/api/backend/pokemon';
 import { getPokemons } from '../config/api/backend/pokemons';
 import { capitalize } from '../helpers/strings';
+import type { APIPokemon, APIPokemonSpecies } from '../types';
+import { getEvolutionsIndex } from '../helpers/api';
+import StatsBar from '../components/StatsBar.astro';
+import { ReactCard } from '../components/ReactCard';
 
 export const getStaticPaths = async () => {
   const allPokemons = await getPokemons(10000, 0);
@@ -13,30 +17,78 @@ export const getStaticPaths = async () => {
 };
 
 const { name } = Astro.params;
+
+const pokemon = (await getPokemon(name)) as APIPokemon;
+const response = await fetch(pokemon?.species.url || '');
+const specie: APIPokemonSpecies = await response.json();
+const evolution = await (await fetch(specie.evolution_chain.url)).json();
+const evolutionsIndex = getEvolutionsIndex(evolution);
 ---
 
 <Layout title={capitalize(name)}>
-  <div>
-    <ThemeToggle />
-    <div class='dark:text-yellow-300 text-yellow-800'>
-      hola, esta es la pagina de {name}
-    </div>
-  </div>
-  <img src='' alt={name} class='pokemon-image' />
+  <article class='pokemon-page mt-12 mx-auto'>
+    <section class='main-content flex gap-4 flex-col md:flex-row items-center'>
+      <ReactCard
+        title={name}
+        image={pokemon?.sprites.other['official-artwork'].front_default}
+        id={pokemon?.id}
+        types={pokemon.types.map((type: any) => type.type.name)}
+        infoButton={false}
+      />
+
+      <div
+        class='main-content__stats-container w-full flex flex-col gap-4 self-start'
+      >
+        {
+          pokemon?.stats.map((stat) => {
+            return (
+              <div class='flex flex-row gap-4 '>
+                <h3 class='dark:text-white  text-black grow-[2] basis-0'>
+                  {stat.stat.name}
+                </h3>
+                <div class=' grow-[8] basis-0 '>
+                  <StatsBar stats={stat.base_stat} />
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <section class='evolutions-container flex flex-col justify-center mt-12'>
+      <h2 class='text-center dark:text-white text-black'>Evoluciones</h2>
+      <section
+        class='evolutions-container__image-container flex flex-row gap-4 w-full pl-20 pr-20 pb-20 justify-center'
+      >
+        {
+          evolutionsIndex.map((phase) => {
+            return (
+              <div class='flex flex-col gap-4 justify-center items-center'>
+                <a href={`/${phase.name}`}>
+                  <figure class=' grow basis-1 w-full'>
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${phase.index}.png`}
+                      alt={phase.name}
+                      class='pokemon-image'
+                    />
+                  </figure>
+                </a>
+                <h3 class='dark:text-white text-black'>
+                  {capitalize(phase.name)}
+                </h3>
+              </div>
+            );
+          })
+        }
+      </section>
+    </section>
+  </article>
 </Layout>
-<script>
-  import { $pokemons, $pokemonName } from '../shared/pokemons';
-  document.addEventListener('astro:page-load', () => {
-    const pokemonImage = document.querySelector(
-      '.pokemon-image'
-    ) as HTMLImageElement;
-    if (!pokemonImage) return false;
-    console.log(pokemonImage);
-    const pokemon = $pokemons
-      .get()
-      .find((pokemon) => pokemon.name === $pokemonName.get());
-    const pokemonImageUrl =
-      pokemon?.sprites.other['official-artwork'].front_default ?? '';
-    pokemonImage.src = pokemonImageUrl;
-  });
-</script>
+
+<style>
+  .pokemon-page {
+    width: 1200px;
+    max-width: calc(100% - 2rem);
+  }
+</style>
