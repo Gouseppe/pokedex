@@ -14,12 +14,13 @@ export const SearchInput = () => {
     const pokemonString = (
       searchinput.current as HTMLInputElement
     ).value.trim();
-    console.log(pokemonString);
     if (pokemonString) {
+      setPokemon([]);
       const pokemon = await getPokemon(pokemonString);
-      pokemon ? setPokemon([pokemon]) : setPokemon([]);
+      pokemon ? setPokemon([pokemon]) : setPokemon(undefined);
     } else {
       if (filter.page === 0) {
+        setPokemon([]);
         const pokemonsUrl = await getPokemons(
           filter.cant,
           filter.page * filter.cant
@@ -41,11 +42,11 @@ export const SearchInput = () => {
 
   useEffect(() => {
     return () => {
-      if (pokemons.length === 1) {
+      if (pokemons?.length === 1) {
         setFilter({ cant: 30, page: 0 });
       }
     };
-  }, [pokemons.length]);
+  }, [pokemons?.length]);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleEnter: KeyboardEventHandler<HTMLDivElement> = (event) => {
