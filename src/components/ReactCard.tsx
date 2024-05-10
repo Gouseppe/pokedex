@@ -8,6 +8,7 @@ interface Props {
   body?: string;
   image: string;
   types: PokemonTypes[];
+  infoButton?: boolean;
 }
 const colors: Record<PokemonTypes, string> = {
   bug: 'bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300',
@@ -49,6 +50,7 @@ export const ReactCard: React.FC<Props> = ({
   types,
   body,
   id,
+  infoButton = true,
 }) => {
   return (
     <section className='max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
@@ -75,13 +77,15 @@ export const ReactCard: React.FC<Props> = ({
             })}
           </div>
 
-          <a
-            href={`${title}`}
-            className='inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-            onClick={() => setPokemonName(title)}
-          >
-            Saber mas
-          </a>
+          {infoButton && (
+            <a
+              href={`${title}`}
+              className='inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+              onClick={() => setPokemonName(title)}
+            >
+              Saber mas
+            </a>
+          )}
         </div>
       </div>
     </section>
