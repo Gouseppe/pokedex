@@ -1,13 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ThemeToggle from '../components/ThemeToggler.astro';
 import { getPokemon } from '../config/api/backend/pokemon';
 import { getPokemons } from '../config/api/backend/pokemons';
 import { capitalize } from '../helpers/strings';
-import type { APIPokemon, APIPokemonSpecies } from '../types';
+import type { APIPokemon, APIPokemonSpecies, PokemonTypes } from '../types';
 import { getEvolutionsIndex } from '../helpers/api';
 import StatsBar from '../components/StatsBar.astro';
 import { ReactCard } from '../components/ReactCard';
+import PokemonTypeTag from '../components/pokemonTypeTag.astro';
+import { getDebilities } from '../helpers/api/get-debilities';
 
 export const getStaticPaths = async () => {
   const allPokemons = await getPokemons(10000, 0);
@@ -16,50 +17,122 @@ export const getStaticPaths = async () => {
   }));
 };
 
-const { name } = Astro.params;
+const englisToSpanish = (stat: string) => {
+  switch (stat) {
+    case 'hp':
+      return 'Vida';
+    case 'attack':
+      return 'Ataque';
+    case 'defense':
+      return 'Defensa';
+    case 'special-attack':
+      return 'Ataque especial';
+    case 'special-defense':
+      return 'Defensa especial';
+    case 'speed':
+      return 'Velocidad';
+  }
+};
 
+const { name } = Astro.params;
 const pokemon = (await getPokemon(name)) as APIPokemon;
 const response = await fetch(pokemon?.species.url || '');
 const specie: APIPokemonSpecies = await response.json();
 const evolution = await (await fetch(specie.evolution_chain.url)).json();
 const evolutionsIndex = getEvolutionsIndex(evolution);
+const aux2 = pokemon.types.map(
+  async (type: any) => await (await fetch(type.type.url)).json()
+);
+const aux = await Promise.all(aux2);
+const debilities = getDebilities(aux);
+const x4 = debilities.filter((e) => e.value === 4);
+const x2 = debilities.filter((e) => e.value === 2);
+const x0 = debilities.filter((e) => e.value === 0);
 ---
 
 <Layout title={capitalize(name)}>
   <article class='pokemon-page mt-12 mx-auto'>
     <section class='main-content flex gap-4 flex-col md:flex-row items-center'>
-      <ReactCard
-        title={name}
-        image={pokemon?.sprites.other['official-artwork'].front_default}
-        id={pokemon?.id}
-        types={pokemon.types.map((type: any) => type.type.name)}
-        infoButton={false}
-      />
-
-      <div
-        class='main-content__stats-container w-full flex flex-col gap-4 self-start'
-      >
-        {
-          pokemon?.stats.map((stat) => {
-            return (
-              <div class='flex flex-row gap-4 '>
-                <h3 class='dark:text-white  text-black grow-[2] basis-0'>
-                  {stat.stat.name}
-                </h3>
-                <div class=' grow-[8] basis-0 '>
-                  <StatsBar stats={stat.base_stat} />
+      <div class='md:self-start card'>
+        <ReactCard
+          title={name}
+          image={pokemon?.sprites.other['official-artwork'].front_default}
+          id={pokemon?.id}
+          types={pokemon.types.map((type: any) => type.type.name)}
+          infoButton={false}
+        />
+      </div>
+      <div class='w-full flex flex-col gap-4'>
+        <div
+          class='main-content__stats-container w-full flex flex-col gap-4 self-start glassmorphism p-2 md:p-4'
+        >
+          {
+            pokemon?.stats.map((stat) => {
+              return (
+                <div class='flex flex-row gap-4 '>
+                  <h3 class='dark:text-white  text-black grow-[2] basis-0 font-bold'>
+                    {englisToSpanish(stat.stat.name)}
+                  </h3>
+                  <div class=' grow-[8] basis-0 '>
+                    <StatsBar stats={stat.base_stat} />
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        }
+              );
+            })
+          }
+        </div>
+        <div class='dark:text-white text-black glassmorphism p-2 md:p-4'>
+          <h2 class='text-lg font-bold'>Descripción</h2>
+          <p>
+            {
+              specie.flavor_text_entries.filter(
+                (e) => e.language.name === 'es'
+              )[0]?.flavor_text ?? 'No hay descripción'
+            }
+          </p>
+        </div>
+        <div class='dark:text-white text-black glassmorphism p-2 md:p-4'>
+          <h2 class='text-lg font-bold mb-2'>Debilidades</h2>
+          <div class='flex gap-2 flex-col'>
+            <div class='flex gap-2'>
+              <h3 class='font-bold'>x4</h3>
+              {
+                x4.length > 0 ? (
+                  x4.map((e) => (
+                    <PokemonTypeTag type={e.name as PokemonTypes} />
+                  ))
+                ) : (
+                  <span class='bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-800 dark:text-gray-300'>
+                    Ninguna
+                  </span>
+                )
+              }
+            </div>
+            <div class='flex gap-2'>
+              <h3 class='font-bold'>x2</h3>
+              {
+                x2.length > 0 ? (
+                  x2.map((e) => (
+                    <PokemonTypeTag type={e.name as PokemonTypes} />
+                  ))
+                ) : (
+                  <span class='bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-800 dark:text-gray-300'>
+                    Ninguna
+                  </span>
+                )
+              }
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class='evolutions-container flex flex-col justify-center mt-12'>
-      <h2 class='text-center dark:text-white text-black'>Evoluciones</h2>
+      <h2 class='text-center dark:text-white text-black text-lg font-bold'>
+        Evoluciones
+      </h2>
       <section
-        class='evolutions-container__image-container flex flex-row gap-4 w-full pl-20 pr-20 pb-20 justify-center'
+        class='evolutions-container__image-container flex flex-row gap-4 w-full md:pl-20 md:pr-20 md:ypb-20 justify-center'
       >
         {
           evolutionsIndex.map((phase) => {
@@ -90,5 +163,17 @@ const evolutionsIndex = getEvolutionsIndex(evolution);
   .pokemon-page {
     width: 1200px;
     max-width: calc(100% - 2rem);
+  }
+  .glassmorphism {
+    background: rgba(252, 252, 252, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(7.7px);
+    -webkit-backdrop-filter: blur(7.7px);
+    border: 1px solid rgba(252, 252, 252, 0.2);
+  }
+  .card {
+    width: 40%;
+    min-width: 340px;
   }
 </style>
