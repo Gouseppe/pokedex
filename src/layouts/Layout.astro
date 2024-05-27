@@ -22,10 +22,8 @@ const { title } = Astro.props;
     <ViewTransitions />
   </head>
   <body class='bg-slate-50 dark:bg-[#13151a] pt-4'>
-    <h1
-      class='dark:text-white text-gray-800 mx-auto mb-4 flex justify-center text-7xl font-bold'
-    >
-      <a href='/' class='block leading-[6.5rem]'> Pokedex </a>
+    <h1 class='mb-4 flex justify-center text-7xl font-bold'>
+      <a href='/' class='block leading-[6.6rem]'> Pokedex </a>
     </h1>
     <ThemeToggle />
 
@@ -72,8 +70,8 @@ const { title } = Astro.props;
         min-height: 100vh;
       }
       h1 {
-        color: transparent !important;
-        background-clip: text !important;
+        color: transparent;
+        background-clip: text;
         background-image: linear-gradient(
           to left,
           #ffd700,
@@ -81,7 +79,7 @@ const { title } = Astro.props;
           #3498db,
           #2ecc71,
           #ffd700
-        ) !important;
+        );
         text-align: center;
         font-family: 'Pokemon Hollow';
         animation: color 3s linear infinite;
