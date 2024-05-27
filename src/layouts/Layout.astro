@@ -17,22 +17,30 @@ const { title } = Astro.props;
     <meta name='viewport' content='width=device-width' />
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <meta name='generator' content={Astro.generator} />
+
     <title>{title}</title>
     <ViewTransitions />
   </head>
   <body class='bg-slate-50 dark:bg-[#13151a] pt-4'>
     <h1
-      class='dark:text-white text-gray-800 mx-auto mb-4 flex justify-center text-5xl font-bold'
+      class='dark:text-white text-gray-800 mx-auto mb-4 flex justify-center text-7xl font-bold'
     >
-      <a href='/' class='block'>
-        Welcome to my <span class='text-gradient'>Pokedex</span>
-      </a>
+      <a href='/' class='block leading-[6.5rem]'> Pokedex </a>
     </h1>
     <ThemeToggle />
 
     <slot />
 
     <style is:global>
+      @font-face {
+        font-family: 'Pokemon Solid';
+        src: url('./../assets/fonts/pokemon-solid/pokemon-solid.ttf');
+      }
+
+      @font-face {
+        font-family: 'Pokemon Hollow';
+        src: url('./../assets/fonts/pokemon-hollow/pokemon-hollow.ttf');
+      }
       :root {
         --accent: 136, 58, 234;
         --accent-light: 224, 204, 250;
@@ -64,7 +72,28 @@ const { title } = Astro.props;
         min-height: 100vh;
       }
       h1 {
+        color: transparent !important;
+        background-clip: text !important;
+        background-image: linear-gradient(
+          to left,
+          #ffd700,
+          #7b68ee,
+          #3498db,
+          #2ecc71,
+          #ffd700
+        ) !important;
         text-align: center;
+        font-family: 'Pokemon Hollow';
+        animation: color 3s linear infinite;
+        background-size: 500%;
+      }
+      @keyframes color {
+        from {
+          background-position: 0% 50%;
+        }
+        to {
+          background-position: 100% 50%;
+        }
       }
     </style>
   </body>
