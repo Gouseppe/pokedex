@@ -6,8 +6,16 @@ import lunala from '../assets/lunala.png';
 <label
   transition:persist='theme-toggle'
   class='inline-flex items-center cursor-pointer fixed bottom-4 right-4'
+  for='toggle-theme'
 >
-  <input type='checkbox' value='' class='sr-only peer' id='toggle-theme' />
+  <span class='sr-only'>Cambiar tema</span>
+  <input
+    type='checkbox'
+    value=''
+    class='sr-only peer'
+    id='toggle-theme'
+    name='toggle-theme'
+  />
   <div
     class='circle-container dark:border-violet-800 border-yellow-200 border-2 dark:shadow-border-toggle-dark shadow-border-toggle-light'
   >
