@@ -10,6 +10,6 @@ Espero que te guste 😁 [link del despliegue][deployLink]
 
 * Fernando Guzmán [@Gouseppe][myGitHub]
 
-[deploylink]: https://pokedex-mu-three-98.vercel.app
+[deploylink]: https://pokedex-web-astro.vercel.app
 [myGitHub]: https://github.com/Gouseppe
 [pokeApi]: https://pokeapi.co
