@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import ThemeToggle from '../components/ThemeToggler.astro';
 
 interface Props {
@@ -22,7 +22,7 @@ const { title } = Astro.props;
     <meta name='generator' content={Astro.generator} />
 
     <title>{title}</title>
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body class='bg-slate-50 dark:bg-[#13151a] pt-4'>
     <h1 class='mb-4 flex justify-center text-7xl font-bold'>
