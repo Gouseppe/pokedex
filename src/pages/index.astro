@@ -10,7 +10,7 @@ import { SearchInput } from '../components/SearchInput';
       <SearchInput client:load />
     </div>
 
-    <PokemonInfiniteScroll client:load />
+    <PokemonInfiniteScroll client:only='react' />
   </main>
 </Layout>
 
