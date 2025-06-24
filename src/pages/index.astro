@@ -7,10 +7,10 @@ import { SearchInput } from '../components/SearchInput';
 <Layout title='Pokedex Web'>
   <main>
     <div class='pb-4'>
-      <SearchInput client:only='react' />
+      <SearchInput client:load />
     </div>
 
-    <PokemonInfiniteScroll client:only='react' />
+    <PokemonInfiniteScroll client:load />
   </main>
 </Layout>
 
