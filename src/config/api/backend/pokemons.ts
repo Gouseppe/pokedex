@@ -1,4 +1,5 @@
 import type { APIPokemon, APIPokemons, Result } from "../../../types";
+import type { PokemonDeno } from "../../../types/api/deno-api";
 import { API_URL } from "../../consts";
 
 export const getPokemons = async (
@@ -17,11 +18,11 @@ export const getPokemons = async (
 export const getPokemonsData = async (
   limit: number,
   offset: number
-): Promise<APIPokemon[]> => {
+): Promise<PokemonDeno[]> => {
   const response = await fetch(
     `https://pokeapi.deno.dev/pokemon?limit=${limit}&offset=${offset}`
   );
-  const result: APIPokemon[] = await response.json();
+  const result: PokemonDeno[] = await response.json();
   const allPokemons = result;
 
   return allPokemons;

@@ -12,6 +12,8 @@ import {
 } from "../shared";
 import { useStore } from "@nanostores/react";
 import { Charging } from "./Charging";
+import type plugin from "tailwindcss";
+import type { PokemonDeno } from "../types/api/deno-api";
 
 export const PokemonInfiniteScroll = () => {
   const pokemons = useStore($pokemons);
@@ -31,7 +33,7 @@ export const PokemonInfiniteScroll = () => {
         console.log("pokemonsData", pokemonsData);
         pokemons?.length === 1
           ? setPokemons([...pokemonsData])
-          : setPokemons([...(pokemons as APIPokemon[]), ...pokemonsData]);
+          : setPokemons([...(pokemons as PokemonDeno[]), ...pokemonsData]);
       }
       setIsFetching(false);
     })();
@@ -86,7 +88,7 @@ export const PokemonInfiniteScroll = () => {
                 id={pokemon.id}
                 image={pokemon.imageUrl}
                 title={pokemon.name.toLowerCase()}
-                types={pokemon.types.map((type) => type.toLowerCase())}
+                types={pokemon.types.map((type) => type.toLowerCase() as any)}
               />
             ))}
           </div>
