@@ -1,4 +1,4 @@
-import type { Species } from './pokemons';
+import type { Species } from "./pokemons";
 export type APIEvolutionChain = {
   baby_trigger_item: null;
   chain: Chain;

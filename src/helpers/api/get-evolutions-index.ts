@@ -1,7 +1,11 @@
-import type { APIEvolutionChain } from '../../types/api';
+import type { APIEvolutionChain } from "../../types/api";
 
 export const getEvolutionsIndex = (evolutionChain: APIEvolutionChain) => {
-  const evolutionsIndex: { name: string; index: string }[] = [];
+  const evolutionsIndex: {
+    name: string;
+    index: string;
+    evolves_to?: number | null;
+  }[] = [];
 
   evolutionsIndex.push({
     index: (
@@ -20,6 +24,8 @@ export const getEvolutionsIndex = (evolutionChain: APIEvolutionChain) => {
         ) as string[]
       )[1],
       name: evolutionChain.chain.evolves_to[0].species.name,
+      evolves_to:
+        evolutionChain.chain.evolves_to[0].evolution_details[0].min_level,
     });
 
     if (evolutionChain.chain.evolves_to[0].evolves_to[0]) {
@@ -31,6 +37,9 @@ export const getEvolutionsIndex = (evolutionChain: APIEvolutionChain) => {
           ).match(/\/([0-9]+)\//) as string[]
         )[1],
         name: evolutionChain.chain.evolves_to[0].evolves_to[0].species.name,
+        evolves_to:
+          evolutionChain.chain.evolves_to[0].evolves_to[0].evolution_details[0]
+            .min_level,
       });
     }
   }
