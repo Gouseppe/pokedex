@@ -25,7 +25,7 @@ export const getEvolutionsIndex = (evolutionChain: APIEvolutionChain) => {
       )[1],
       name: evolutionChain.chain.evolves_to[0].species.name,
       evolves_to:
-        evolutionChain.chain.evolves_to[0].evolution_details[0].min_level,
+        evolutionChain.chain.evolves_to[0].evolution_details[0]?.min_level,
     });
 
     if (evolutionChain.chain.evolves_to[0].evolves_to[0]) {
