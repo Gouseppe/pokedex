@@ -20,7 +20,7 @@ export const getPokemonsData = async (
   offset: number
 ): Promise<PokemonDeno[]> => {
   const response = await fetch(
-    `https://pokeapi.deno.dev/pokemon?limit=${limit}&offset=${offset}`
+    `https://pokeapi.deno.dev/pokemon?limit=${limit}&offset=${offset + 1}`
   );
   const result: PokemonDeno[] = await response.json();
   const allPokemons = result;

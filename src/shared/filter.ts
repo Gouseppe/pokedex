@@ -1,7 +1,7 @@
 import { atom } from "nanostores";
 
 export const $filter = atom<{ cant: number; page: number }>({
-  cant: 3,
+  cant: 10,
   page: 0,
 });
 

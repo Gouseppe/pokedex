@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  /* Define una nueva variable para tu configuración de grid */
+  --grid-template-columns-cards: repeat(auto-fit, minmax(24ch, 1fr));
+  
+   --shadow-border-toggle-dark: inset 0 0 10px rgb(76 29 149), 0 0 10px rgb(76 29 149);
+   --shadow-border-toggle-light: inset 0 0 10px rgb(254 240 138), 0 0 10px rgb(254 240 138);
+   --shadow-border-bar-light: 0 0 5px rgb(0 0 0);
+}

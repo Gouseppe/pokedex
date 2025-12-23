@@ -12,51 +12,48 @@ import {
 } from "../shared";
 import { useStore } from "@nanostores/react";
 import { Charging } from "./Charging";
-import type plugin from "tailwindcss";
 import type { PokemonDeno } from "../types/api/deno-api";
 
 export const PokemonInfiniteScroll = () => {
   const pokemons = useStore($pokemons);
   const pokemon = useStore($pokemon);
   const filter = useStore($filter);
-  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     (async () => {
-      setIsFetching(true);
-
       if (pokemons?.length !== filter.cant * (filter.page + 1)) {
         const pokemonsData = await getPokemonsData(
           filter.cant,
           filter.page * filter.cant
         );
+
         console.log("pokemonsData", pokemonsData);
-        pokemons?.length === 1
-          ? setPokemons([...pokemonsData])
-          : setPokemons([...(pokemons as PokemonDeno[]), ...pokemonsData]);
+        setPokemons([...(pokemons as PokemonDeno[]), ...pokemonsData]);
       }
-      setIsFetching(false);
     })();
   }, [filter.cant, filter.page]);
 
   const updateFilter = () => {
-    setFilter({ cant: 30, page: filter.page + 1 });
+    setFilter({ cant: 10, page: filter.page + 1 });
   };
 
   // Si la página no genera scrollbar (pantalla muy alta), seguir solicitando
   // más elementos hasta que haya scroll o no queden más datos.
   useEffect(() => {
+    if (pokemons?.length === 0) return;
     if (typeof window === "undefined") return;
-    if (isFetching) return;
-    const doc = document.documentElement || document.body;
-    const needsMore = doc.scrollHeight <= window.innerHeight;
-    if (needsMore) {
-      // Evitar peticiones infinitas: comprobar que ya existe al menos un elemento
-      if ((pokemons?.length || 0) > 0) {
-        updateFilter();
+
+    setTimeout(() => {
+      const doc = document.documentElement || document.body;
+      const needsMore = doc.scrollHeight <= window.innerHeight;
+      if (needsMore) {
+        // Evitar peticiones infinitas: comprobar que ya existe al menos un elemento
+        if ((pokemons?.length || 0) > 0) {
+          updateFilter();
+        }
       }
-    }
-  }, [pokemons, isFetching]);
+    }, 500);
+  }, [pokemons]);
 
   return (
     <div>
@@ -65,7 +62,7 @@ export const PokemonInfiniteScroll = () => {
           El pokemon que esta buscando no se encuentra
         </p>
       ) : pokemon ? (
-        <div className="gap-4 grid grid-cols-link-card justify-items-center">
+        <div className="gap-4 grid grid-cols-cards justify-items-center">
           <ReactCard
             key={pokemon.id}
             id={pokemon.id}
@@ -81,7 +78,7 @@ export const PokemonInfiniteScroll = () => {
           hasMore={true}
           loader={<Charging />}
         >
-          <div className="gap-4 grid grid-cols-link-card justify-items-center">
+          <div className="gap-4 grid grid-cols-cards justify-items-center">
             {pokemons?.map((pokemon) => (
               <ReactCard
                 key={pokemon.id}
