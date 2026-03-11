@@ -10,7 +10,7 @@ import { ReactCard } from "../components/ReactCard";
 import PokemonTypeTag from "../components/pokemonTypeTag.astro";
 import { getDebilities } from "../helpers/api/get-debilities";
 
-export const prerender = false;
+export const prerender = "false";
 
 export const getStaticPaths = async () => {
   const allPokemons = await getPokemons(10000, 0);
