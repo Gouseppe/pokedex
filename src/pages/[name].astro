@@ -10,6 +10,8 @@ import { ReactCard } from "../components/ReactCard";
 import PokemonTypeTag from "../components/pokemonTypeTag.astro";
 import { getDebilities } from "../helpers/api/get-debilities";
 
+export const prerender = "false";
+
 export const getStaticPaths = async () => {
   const allPokemons = await getPokemons(10000, 0);
   return allPokemons.map(({ name }) => ({
@@ -41,7 +43,7 @@ const specie: APIPokemonSpecies = await response.json();
 const evolution = await (await fetch(specie.evolution_chain.url)).json();
 const evolutionsIndex = getEvolutionsIndex(evolution);
 const aux2 = pokemon.types.map(
-  async (type: any) => await (await fetch(type.type.url)).json()
+  async (type: any) => await (await fetch(type.type.url)).json(),
 );
 const aux = await Promise.all(aux2);
 const debilities = getDebilities(aux);
@@ -70,10 +72,10 @@ const x0 = debilities.filter((e) => e.value === 0);
             pokemon?.stats.map((stat) => {
               return (
                 <div class="flex flex-row gap-4 ">
-                  <h3 class="dark:text-white  text-black grow-[2] basis-0 font-bold">
+                  <h3 class="dark:text-white  text-black grow-2 basis-0 font-bold">
                     {englisToSpanish(stat.stat.name)}
                   </h3>
-                  <div class=" grow-[8] basis-0 ">
+                  <div class=" grow-8 basis-0 ">
                     <StatsBar stats={stat.base_stat} />
                   </div>
                 </div>
@@ -86,7 +88,7 @@ const x0 = debilities.filter((e) => e.value === 0);
           <p>
             {
               specie.flavor_text_entries.filter(
-                (e) => e.language.name === "es"
+                (e) => e.language.name === "es",
               )[0]?.flavor_text ?? "No hay descripción"
             }
           </p>
@@ -139,9 +141,9 @@ const x0 = debilities.filter((e) => e.value === 0);
             return (
               <>
                 {phase.evolves_to && (
-                  <span class="bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-800 dark:text-gray-300">
+                  <div class="bg-gray-100 self-center text-gray-800 h-min text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-800 dark:text-gray-300">
                     {`Evoluciona al nivel ${phase.evolves_to}`}
-                  </span>
+                  </div>
                 )}
                 <div class="flex flex-col gap-4 justify-center items-center">
                   <a href={`/${phase.name}`}>
