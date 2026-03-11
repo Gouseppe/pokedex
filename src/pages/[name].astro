@@ -50,8 +50,6 @@ const debilities = getDebilities(aux);
 const x4 = debilities.filter((e) => e.value === 4);
 const x2 = debilities.filter((e) => e.value === 2);
 const x0 = debilities.filter((e) => e.value === 0);
-// Datos dinámicos
-const randomNumber = Math.random();
 ---
 
 <Layout title={capitalize(name)}>
@@ -86,7 +84,7 @@ const randomNumber = Math.random();
           }
         </div>
         <div class="dark:text-white text-black glassmorphism p-2 md:p-4">
-          <h2 class="text-lg font-bold">Descripción {randomNumber}</h2>
+          <h2 class="text-lg font-bold">Descripción</h2>
           <p>
             {
               specie.flavor_text_entries.filter(
