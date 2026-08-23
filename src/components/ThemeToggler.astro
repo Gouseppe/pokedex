@@ -1,30 +1,30 @@
 ---
-import solgaleo from '../assets/solgaleo.png';
-import lunala from '../assets/lunala.png';
+import solgaleo from "../assets/solgaleo.png";
+import lunala from "../assets/lunala.png";
 ---
 
 <label
-  transition:persist='theme-toggle'
-  class='inline-flex items-center cursor-pointer fixed bottom-4 right-4'
-  for='toggle-theme'
+  transition:persist="theme-toggle"
+  class="inline-flex items-center cursor-pointer fixed bottom-4 right-4"
+  for="toggle-theme"
 >
-  <span class='sr-only'>Cambiar tema</span>
+  <span class="sr-only">Cambiar tema</span>
   <input
-    type='checkbox'
-    value=''
-    class='sr-only peer'
-    id='toggle-theme'
-    name='toggle-theme'
+    type="checkbox"
+    value=""
+    class="sr-only peer"
+    id="toggle-theme"
+    name="toggle-theme"
   />
   <div
-    class='circle-container dark:border-violet-800 border-yellow-200 border-2 dark:shadow-border-toggle-dark shadow-border-toggle-light'
+    class="circle-container dark:border-violet-800 border-yellow-200 border-2 dark:shadow-border-toggle-dark shadow-border-toggle-light"
   >
-    <div class='circle'>
-      <span class='back' id='back' style=`background-image: url(${lunala.src});`
+    <div class="circle">
+      <span class="back" id="back" style=`background-image: url(${lunala.src});`
       ></span>
       <span
-        class='front'
-        id='front'
+        class="front"
+        id="front"
         style=`background-image: url(${solgaleo.src});`></span>
     </div>
   </div>
@@ -93,7 +93,7 @@ import lunala from '../assets/lunala.png';
       display: block;
       position: absolute;
       border-radius: 50px;
-      transform: translateX(-50%) translateY(-50%) translateZ(-0.1px);
+      transform: translateX(-50%) translateY(-50%) translateZ(-0.4px);
       background-color: rgb(19, 21, 26);
     }
     #toggle-theme:checked + .circle-container .circle {
@@ -101,37 +101,39 @@ import lunala from '../assets/lunala.png';
     }
   </style>
   <script>
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener("astro:page-load", () => {
       const changeTheme = () => {
-        document.documentElement.classList.toggle('dark');
+        document.documentElement.classList.toggle("dark");
         localStorage.setItem(
-          'theme',
-          document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+          "theme",
+          document.documentElement.classList.contains("dark")
+            ? "dark"
+            : "light",
         );
       };
 
       document
-        .getElementById('toggle-theme')
-        ?.addEventListener('change', changeTheme);
+        .getElementById("toggle-theme")
+        ?.addEventListener("change", changeTheme);
     });
   </script>
   <script>
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener("astro:page-load", () => {
       const inputToggle = document.getElementById(
-        'toggle-theme'
+        "toggle-theme",
       ) as HTMLInputElement;
-      if (localStorage.getItem('theme') === 'dark') {
-        document.documentElement.classList.add('dark');
+      if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark");
         inputToggle.checked = true;
         return 0;
       }
-      if (localStorage.getItem('theme') === 'light') {
-        document.documentElement.classList.remove('dark');
+      if (localStorage.getItem("theme") === "light") {
+        document.documentElement.classList.remove("dark");
         inputToggle.checked = false;
         return 0;
       }
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.classList.add('dark');
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
         inputToggle.checked = true;
 
         return 0;
@@ -141,35 +143,37 @@ import lunala from '../assets/lunala.png';
   </script>
 
   <script>
-    document.addEventListener('astro:after-swap', () => {
-      if (localStorage.theme === 'dark') {
-        document.documentElement.classList.add('dark');
+    document.addEventListener("astro:after-swap", () => {
+      if (localStorage.theme === "dark") {
+        document.documentElement.classList.add("dark");
         return 0;
       }
-      if (localStorage.theme === 'light') {
-        document.documentElement.classList.remove('dark');
+      if (localStorage.theme === "light") {
+        document.documentElement.classList.remove("dark");
         return 0;
       }
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.classList.add('dark');
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
         return 0;
       }
     });
   </script>
 
   <script>
-    document.addEventListener('astro:after-swap', () => {
+    document.addEventListener("astro:after-swap", () => {
       const changeTheme = () => {
-        document.documentElement.classList.toggle('dark');
+        document.documentElement.classList.toggle("dark");
         localStorage.setItem(
-          'theme',
-          document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+          "theme",
+          document.documentElement.classList.contains("dark")
+            ? "dark"
+            : "light",
         );
       };
 
       document
-        .getElementById('toggle-theme')
-        ?.addEventListener('change', changeTheme);
+        .getElementById("toggle-theme")
+        ?.addEventListener("change", changeTheme);
     });
   </script>
 </label>
