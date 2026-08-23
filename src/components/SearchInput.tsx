@@ -1,7 +1,7 @@
 import { useRef, type KeyboardEventHandler } from "react";
 
 import { getPokemon } from "../config/api/backend/pokemon";
-import { setPokemon } from "../shared";
+import { setPokemon, setIsCharging } from "../shared";
 
 export const SearchInput = () => {
   const searchinput = useRef({} as HTMLInputElement);
@@ -11,8 +11,13 @@ export const SearchInput = () => {
       searchinput.current as HTMLInputElement
     ).value.trim();
     if (pokemonString) {
-      const pokemon = await getPokemon(pokemonString);
-      setPokemon(pokemon);
+      setIsCharging(true);
+      setTimeout(async () => {
+        const pokemon = await getPokemon(pokemonString);
+
+        setPokemon(pokemon);
+        setIsCharging(false);
+      }, 3000);
     } else {
       setPokemon(undefined);
     }

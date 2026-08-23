@@ -7,12 +7,14 @@ import {
   $pokemons,
   setFilter,
   setPokemons,
+  $isCharging,
 } from "../shared";
 import { useStore } from "@nanostores/react";
 import { Charging } from "./Charging";
 import { getPokemon } from "../config/api/backend/pokemon";
 
 export const PokemonInfiniteScroll = () => {
+  const isCharging = useStore($isCharging);
   const pokemons = useStore($pokemons);
   const pokemon = useStore($pokemon);
   const filter = useStore($filter);
@@ -66,6 +68,10 @@ export const PokemonInfiniteScroll = () => {
       .catch(() => {});
   }, [filter.cant, filter.page, hasMore]);
 
+  useEffect(() => {
+    console.log("is charging");
+  }, [isCharging]);
+
   const updateFilter = () => {
     setFilter({ ...filter, page: filter.page + 1 });
   };
@@ -92,11 +98,13 @@ export const PokemonInfiniteScroll = () => {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [pokemons, hasMore]);
+  }, [pokemons, hasMore, pokemon]);
 
   return (
     <div>
-      {pokemon === null ? (
+      {isCharging ? (
+        <Charging />
+      ) : pokemon === null ? (
         <p className="text-center">
           El pokemon que esta buscando no se encuentra
         </p>
