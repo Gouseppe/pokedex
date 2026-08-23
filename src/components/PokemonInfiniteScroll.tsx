@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { ReactCard } from "./ReactCard";
 import { getPokemons } from "../config/api/backend/pokemons";
 import {
@@ -17,8 +16,11 @@ export const PokemonInfiniteScroll = () => {
   const pokemons = useStore($pokemons);
   const pokemon = useStore($pokemon);
   const filter = useStore($filter);
+  const [isFetching, setIsFetching] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const queueRef = useRef<Promise<void>>(Promise.resolve());
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const busyRef = useRef(false);
 
   useEffect(() => {
     queueRef.current = queueRef.current
@@ -27,6 +29,8 @@ export const PokemonInfiniteScroll = () => {
         const expected = filter.cant * (filter.page + 1);
         if (!hasMore || current.length >= expected) return;
 
+        busyRef.current = true;
+        setIsFetching(true);
         try {
           const offset = filter.page * filter.cant;
           const pokemonsUrl = await getPokemons(filter.cant, offset);
@@ -54,6 +58,9 @@ export const PokemonInfiniteScroll = () => {
           if (pokemonsUrl.length < filter.cant) setHasMore(false);
         } catch (error) {
           console.error("Error cargando pokemons:", error);
+        } finally {
+          busyRef.current = false;
+          setIsFetching(false);
         }
       })
       .catch(() => {});
@@ -63,22 +70,28 @@ export const PokemonInfiniteScroll = () => {
     setFilter({ ...filter, page: filter.page + 1 });
   };
 
-  // Si la página no genera scrollbar (pantalla muy alta), seguir solicitando
-  // más elementos hasta que haya scroll o no queden más datos.
+  // Dispara la siguiente página cuando el centinela entra al viewport.
+  // Cubre ambos casos sin medir scrollHeight: scroll hasta el fondo y
+  // pantallas más altas que el contenido (el centinela ya es visible).
   useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
     if ((pokemons?.length || 0) === 0) return;
-    if (!hasMore) return;
-    if (typeof window === "undefined") return;
 
-    const timer = setTimeout(() => {
-      const doc = document.documentElement || document.body;
-      const needsMore = doc.scrollHeight <= window.innerHeight;
-      if (needsMore) {
-        updateFilter();
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries.some((entry) => entry.isIntersecting) &&
+          !busyRef.current &&
+          hasMore
+        ) {
+          updateFilter();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [pokemons, hasMore]);
 
   return (
@@ -98,12 +111,7 @@ export const PokemonInfiniteScroll = () => {
           />
         </div>
       ) : (
-        <InfiniteScroll
-          dataLength={pokemons?.length || 0}
-          next={updateFilter}
-          hasMore={hasMore}
-          loader={<Charging />}
-        >
+        <>
           <div className="gap-4 grid grid-cols-cards justify-items-center">
             {pokemons?.map((pokemon) => (
               <ReactCard
@@ -115,7 +123,9 @@ export const PokemonInfiniteScroll = () => {
               />
             ))}
           </div>
-        </InfiniteScroll>
+          {isFetching && hasMore && <Charging />}
+          <div ref={sentinelRef} aria-hidden="true" />
+        </>
       )}
     </div>
   );
