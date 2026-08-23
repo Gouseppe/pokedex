@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import type { APIPokemon, PokemonTypes } from "../types";
 import { ReactCard } from "./ReactCard";
-import { getPokemonsData } from "../config/api/backend/pokemons";
+import { getPokemons } from "../config/api/backend/pokemons";
 import {
   $filter,
   $pokemon,
@@ -12,48 +11,75 @@ import {
 } from "../shared";
 import { useStore } from "@nanostores/react";
 import { Charging } from "./Charging";
-import type { PokemonDeno } from "../types/api/deno-api";
+import { getPokemon } from "../config/api/backend/pokemon";
 
 export const PokemonInfiniteScroll = () => {
   const pokemons = useStore($pokemons);
   const pokemon = useStore($pokemon);
   const filter = useStore($filter);
+  const [hasMore, setHasMore] = useState(true);
+  const queueRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
-    (async () => {
-      if (pokemons?.length !== filter.cant * (filter.page + 1)) {
-        const pokemonsData = await getPokemonsData(
-          filter.cant,
-          filter.page * filter.cant
-        );
+    queueRef.current = queueRef.current
+      .then(async () => {
+        const current = $pokemons.get() ?? [];
+        const expected = filter.cant * (filter.page + 1);
+        if (!hasMore || current.length >= expected) return;
 
-        console.log("pokemonsData", pokemonsData);
-        setPokemons([...(pokemons as PokemonDeno[]), ...pokemonsData]);
-      }
-    })();
-  }, [filter.cant, filter.page]);
+        try {
+          const offset = filter.page * filter.cant;
+          const pokemonsUrl = await getPokemons(filter.cant, offset);
+          if (pokemonsUrl.length === 0) {
+            setHasMore(false);
+            return;
+          }
+          const settled = await Promise.all(
+            pokemonsUrl.map(async (pokemon: { name: string }) => {
+              try {
+                return await getPokemon(pokemon.name);
+              } catch {
+                return null;
+              }
+            }),
+          );
+          const byId = new Map(current.map((p) => [p.id, p]));
+          for (const p of settled) {
+            if (p !== null) byId.set(p.id, p);
+          }
+
+          if (byId.size > 0) {
+            setPokemons([...byId.values()]);
+          }
+          if (pokemonsUrl.length < filter.cant) setHasMore(false);
+        } catch (error) {
+          console.error("Error cargando pokemons:", error);
+        }
+      })
+      .catch(() => {});
+  }, [filter.cant, filter.page, hasMore]);
 
   const updateFilter = () => {
-    setFilter({ cant: 10, page: filter.page + 1 });
+    setFilter({ ...filter, page: filter.page + 1 });
   };
 
   // Si la página no genera scrollbar (pantalla muy alta), seguir solicitando
   // más elementos hasta que haya scroll o no queden más datos.
   useEffect(() => {
-    if (pokemons?.length === 0) return;
+    if ((pokemons?.length || 0) === 0) return;
+    if (!hasMore) return;
     if (typeof window === "undefined") return;
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       const doc = document.documentElement || document.body;
       const needsMore = doc.scrollHeight <= window.innerHeight;
       if (needsMore) {
-        // Evitar peticiones infinitas: comprobar que ya existe al menos un elemento
-        if ((pokemons?.length || 0) > 0) {
-          updateFilter();
-        }
+        updateFilter();
       }
-    }, 500);
-  }, [pokemons]);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [pokemons, hasMore]);
 
   return (
     <div>
@@ -62,7 +88,7 @@ export const PokemonInfiniteScroll = () => {
           El pokemon que esta buscando no se encuentra
         </p>
       ) : pokemon ? (
-        <div className="gap-4 grid grid-cols-cards justify-items-center">
+        <div className="gap-4 grid grid-cols-link-card justify-items-center">
           <ReactCard
             key={pokemon.id}
             id={pokemon.id}
@@ -75,7 +101,7 @@ export const PokemonInfiniteScroll = () => {
         <InfiniteScroll
           dataLength={pokemons?.length || 0}
           next={updateFilter}
-          hasMore={true}
+          hasMore={hasMore}
           loader={<Charging />}
         >
           <div className="gap-4 grid grid-cols-cards justify-items-center">
@@ -83,9 +109,9 @@ export const PokemonInfiniteScroll = () => {
               <ReactCard
                 key={pokemon.id}
                 id={pokemon.id}
-                image={pokemon.imageUrl}
-                title={pokemon.name.toLowerCase()}
-                types={pokemon.types.map((type) => type.toLowerCase() as any)}
+                image={pokemon.sprites.other["official-artwork"].front_default}
+                title={pokemon.name}
+                types={pokemon.types.map((type: any) => type.type.name)}
               />
             ))}
           </div>
