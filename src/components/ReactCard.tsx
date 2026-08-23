@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { capitalize } from "../helpers/strings";
 import { setPokemonName } from "../shared";
 import type { PokemonTypes } from "../types";
+import pokeball from "../assets/pokeball.svg?url";
 
 interface Props {
   id: number;
@@ -9,6 +11,7 @@ interface Props {
   image: string;
   types: PokemonTypes[];
   infoButton?: boolean;
+  loaded?: boolean;
 }
 const colors: Record<PokemonTypes, string> = {
   bug: "bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300",
@@ -51,11 +54,35 @@ export const ReactCard: React.FC<Props> = ({
   body,
   id,
   infoButton = true,
+  loaded: loadedValue = false,
 }) => {
+  const [loaded, setLoaded] = useState(loadedValue);
+
   return (
     <section className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:shadow-none">
-      <a href={`${title}`}>
-        <img className="rounded-t-lg" src={image} alt={title} />
+      <a href={`${title}`} className="block">
+        {loaded ? (
+          <img
+            className="rounded-t-lg w-full aspect-square object-contain"
+            src={image}
+            alt={title}
+          />
+        ) : (
+          <>
+            <img
+              className="rounded-t-lg w-full aspect-square object-contain"
+              src={pokeball}
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              className="hidden"
+              src={image}
+              alt={title}
+              onLoad={() => setLoaded(true)}
+            />
+          </>
+        )}
       </a>
       <div className="p-5">
         <div className="flex justify-start gap-2">

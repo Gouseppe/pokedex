@@ -1,0 +1,47 @@
+<svg width="449" height="449" viewBox="0 0 449 449" fill="none" xmlns="http://www.w3.org/2000/svg" style="background-color: transparent">
+<path class='chiquito-rojo' d="M270.19 217C269.611 213.729 268.676 210.522 267.399 207.438C265.093 201.87 261.712 196.811 257.451 192.549C253.189 188.288 248.13 184.907 242.562 182.601C236.994 180.295 231.027 179.108 225 179.108C218.973 179.108 213.006 180.295 207.438 182.601C201.87 184.907 196.811 188.288 192.549 192.549C188.288 196.811 184.908 201.87 182.601 207.438C181.324 210.522 180.39 213.729 179.811 217" stroke="#FF0000" stroke-width="6" stroke-linecap="round"/>
+<path class='semi-circulo-rojo' d="M433.847 217C432.9 192.284 427.572 167.91 418.091 145.019C407.587 119.662 392.193 96.6221 372.785 77.2147C353.378 57.8072 330.338 42.4124 304.981 31.9092C279.624 21.4059 252.446 16 225 16C197.554 16 170.376 21.4059 145.019 31.9092C119.662 42.4124 96.622 57.8072 77.2146 77.2147C57.8071 96.6221 42.4123 119.662 31.9091 145.019C22.4275 167.91 17.0998 192.284 16.1531 217" stroke="#FF0000" stroke-width="6" stroke-linecap="round"/>
+<path class='chiquito-blanco' d="M270.037 233C269.457 236.271 268.523 239.478 267.246 242.562C264.94 248.13 261.559 253.189 257.298 257.451C253.036 261.712 247.977 265.093 242.409 267.399C236.841 269.705 230.874 270.892 224.847 270.892C218.82 270.892 212.853 269.705 207.285 267.399C201.717 265.093 196.658 261.712 192.396 257.451C188.135 253.189 184.754 248.13 182.448 242.562C181.171 239.478 180.237 236.271 179.657 233" stroke="white" stroke-width="6" stroke-linecap="round"/>
+<path class='semi-circulo-blanco' d="M433.694 233C432.747 257.716 427.419 282.09 417.938 304.981C407.434 330.338 392.04 353.378 372.632 372.785C353.225 392.193 330.185 407.588 304.828 418.091C279.471 428.594 252.293 434 224.847 434C197.401 434 170.223 428.594 144.866 418.091C119.509 407.588 96.469 392.193 77.0615 372.785C57.6541 353.378 42.2592 330.338 31.756 304.981C22.2744 282.09 16.9467 257.716 16 233" stroke="white" stroke-width="6" stroke-linecap="round"/>
+<circle cx="225" cy="225" r="30" fill="white"/>
+<g clip-path="url(#clip0_376_2)">
+<rect x="24" y="211" width="144.5" height="6" rx="3" fill="#FF0000"/>
+<rect x="281.5" y="211" width="144.5" height="6" rx="3" fill="#FF0000"/>
+<rect x="24" y="232" width="144.5" height="6" rx="3" fill="white"/>
+<rect x="281.5" y="232" width="144.5" height="6" rx="3" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_376_2">
+<rect width="402" height="27" fill="white" transform="translate(24 211)"/>
+</clipPath>
+</defs>
+<style xmlns="http://www.w3.org/2000/svg">
+        .chiquito-rojo, .chiquito-blanco{
+            animation: 3s linear infinite giro-izquierda;
+            transform-origin: center center
+        }
+        .semi-circulo-blanco, .semi-circulo-rojo{
+            animation: 3s linear infinite giro-derecha;
+            transform-origin: center center
+        }
+       
+        @keyframes giro-derecha{
+            from{
+                transform: rotate(0deg)
+            }
+            to{
+                transform: rotate(360deg)
+            }
+
+        }
+        @keyframes giro-izquierda{
+            from{
+                transform: rotate(0deg)
+            }
+            to{
+                transform: rotate(-360deg)
+            }
+
+        }
+    </style>
+</svg>
